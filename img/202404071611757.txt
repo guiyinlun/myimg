@@ -1,0 +1,19 @@
+string(REGEX REPLACE ".*/\(.*\)" "\\1" CURDEV ${CMAKE_CURRENT_SOURCE_DIR})
+IF (WIN32)
+ADD_SUBDIRECTORY(win32)
+ELSEIF (UNIX)
+ADD_SUBDIRECTORY(linux)
+ENDIF ()
+
+#设备配置项
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/config/dev_win32.conf AND WIN32)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/dev_win32.conf
+                 ${CMAKE_CURRENT_BINARY_DIR}/current.conf)
+  file(READ ${CMAKE_CURRENT_BINARY_DIR}/current.conf cnf_buf)
+  file(APPEND ${TMP_CNF_PATH}/dev.conf "${cnf_buf}")
+elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/config/dev_linux.conf AND UNIX)
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/dev_linux.conf
+                 ${CMAKE_CURRENT_BINARY_DIR}/current.conf)
+  file(READ ${CMAKE_CURRENT_BINARY_DIR}/current.conf cnf_buf)
+  file(APPEND ${TMP_CNF_PATH}/dev.conf "${cnf_buf}")
+endif()
